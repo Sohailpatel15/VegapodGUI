@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidge
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 import serial
 
-com_port = "/dev/ttys006" #data sending
+com_port = "/dev/ttys005" #data sending
 baud_rate = 9600
 ser = serial.Serial(com_port, baud_rate)
 
@@ -16,7 +16,7 @@ class SerialThread(QThread):
 
     def __init__(self, port):
         super().__init__()
-        self.port = "/dev/ttys004" #data receiving
+        self.port = "/dev/ttys003" #data receiving
 
 
     def run(self):
@@ -138,7 +138,7 @@ class MainWindow(QMainWindow):
         self.button6.clicked.connect(self.button6_clicked)
         self.button6.setText('STOP')
 
-        self.serial_thread = SerialThread("/dev/ttys004")  # Replace
+        self.serial_thread = SerialThread("/dev/ttys003")  # Replace
         self.serial_thread.data_received.connect(self.update_table_rows)
         self.serial_thread.start()
 
@@ -173,40 +173,32 @@ class MainWindow(QMainWindow):
 
     send_array(data)
 
-
-
     def update_table_rows(self, data):
         if data.startswith("START") and data.endswith("STOP"):
             values = data[6:-5].split(",")
-            if len(values) == 40:
-                for i in range(9):
-                    item = QTableWidgetItem(values[i])
+            for i in range(min(len(values), 40)):
+                item = QTableWidgetItem(values[i])
+                if i < 9:
                     self.table1.setItem(i, 0, item)
-                for i in range(9, 18):
-                    item = QTableWidgetItem(values[i])
+                elif i < 18:
                     self.table2.setItem(i - 9, 0, item)
-                for i in range(18, 27):
-                    item = QTableWidgetItem(values[i])
+                elif i < 27:
                     self.table3.setItem(i - 18, 0, item)
-                for i in range(27, 29):
-                    item = QTableWidgetItem(values[i])
+                elif i < 29:
                     self.table4.setItem(i - 27, 0, item)
-                for i in range(29, 31):
-                    item = QTableWidgetItem(values[i])
+                elif i < 31:
                     self.table5.setItem(i - 29, 0, item)
-                for i in range(31, 33):
-                    item = QTableWidgetItem(values[i])
+                elif i < 33:
                     self.table6.setItem(i - 31, 0, item)
-                for i in range(33, 37):
-                    item = QTableWidgetItem(values[i])
+                elif i < 37:
                     self.table7.setItem(i - 33, 0, item)
 
-                if len(values) >= 38:
-                    self.lcd1.display(int(values[37]))
-                if len(values) >= 39:
-                    self.lcd2.display(int(values[38]))
-                if len(values) >= 40:
-                    self.lcd3.display(int(values[39]))
+            if len(values) >= 38:
+                self.lcd1.display(int(values[37]))
+            if len(values) >= 39:
+                self.lcd2.display(int(values[38]))
+            if len(values) >= 40:
+                self.lcd3.display(int(values[39]))
 
 
 if __name__ == '__main__':
