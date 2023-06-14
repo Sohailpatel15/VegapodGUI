@@ -396,36 +396,22 @@ class MainWindow(QMainWindow):
                 elif i < 35:
                     self.table5.setItem(i - 29, 0, item)
 
-            if len(values) >= 36:
-                line = int(values[36])
-                y = float(line)
+                if len(values) >= 37:
+                    self.lcd1.display(int(values[37]))
+                if len(values) >= 38:
+                    self.lcd2.display(int(values[38]))
+                if len(values) >= 39:
+                    self.lcd3.display(int(values[39]))
 
-                # Generate x-axis data internally
-                self.counter += 1
+                if len(values) >= 40:
+                    line = int(values[40])
+                    x_data.append(line)  # Append x-axis data
 
-                # Append data to the lists
-                self.data_x.append(self.counter)
-                self.data_y.append(y)
+                if len(values) >= 41:
+                    line = int(values[41])
+                    y_data.append(line)  # Append y-axis data
 
-                # Plot the data
-                self.graphWidget.plot(self.data_x, self.data_y, pen=pg.mkPen('b', width=3), clear=True)
-
-            if len(values) >= 37:
-                self.lcd1.display(int(values[37]))
-            if len(values) >= 38:
-                self.lcd2.display(int(values[38]))
-            if len(values) >= 39:
-                self.lcd3.display(int(values[39]))
-
-            if len(values) >= 40:
-                line = int(values[40])
-                x_data.append(line)  # Append x-axis data
-
-            if len(values) >= 41:
-                line = int(values[41])
-                y_data.append(line)  # Append y-axis data
-
-                self.graph_widget.update_graph(x_data, y_data)
+                    self.graph_widget.update_graph(x_data, y_data)
 
 
 
