@@ -37,14 +37,14 @@ class XBeeThread(QThread):
                 start_time = time.time()
                 xbee_data = None
                 while xbee_data is None:
-                    xbee_data = self.xbee.read_data_block(1000)  # Read a block of data as bytes
+                    xbee_data = self.xbee.read_data_block(1000)  
                     if xbee_data is not None:
                         break
                     if time.time() - start_time > 10:
                         break
                 if xbee_data is not None:
                     data = xbee_data.data
-                    self.data_received.emit(data.decode('utf-8').strip())  # Decode the data as UTF-8
+                    self.data_received.emit(data.decode('utf-8').strip())  
         finally:
             if self.xbee is not None and self.xbee.is_open():
                 self.xbee.close()
